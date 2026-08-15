@@ -1,4 +1,4 @@
-# node-todo-cicd
+# node-todo-cicd for manually run
 
 ## Install Node.js and npm
 
@@ -16,20 +16,23 @@ node app.js
 ## Open Browser:
 http://localhost:3000
 
-## Docker
+# Docker command for jenkins ci/cd 
+
 #!/bin/bash
 
 cd /var/lib/jenkins/workspace/todo-app
 
 echo "Building Docker image..."
-
 docker build -t todo-app:$BUILD_NUMBER .
 
-echo "Starting new container..."
+echo "Stopping old container..."
+docker stop todo-app 2>/dev/null || true
+docker rm todo-app 2>/dev/null || true
 
+echo "Starting new container..."
 docker run -d \
-  --name todo-app-$BUILD_NUMBER \
-  -p 3001:3000 \
+  --name todo-app \
+  -p 3000:3000 \
   todo-app:$BUILD_NUMBER
 
 echo "Build completed!"
